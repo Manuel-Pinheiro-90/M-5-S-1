@@ -1,7 +1,39 @@
-﻿@{
-    ViewData["Title"] = "Home";
+﻿@model IEnumerable<M_5_S_1.Models.Spedizione>
+
+@{
+    ViewData["Title"] = "Spedizioni in Consegna Oggi";
 }
 
-<h2>Benvenuto nell'Agenzia di Spedizioni</h2>
-<p>Scopri i nostri servizi e verifica lo stato delle tue spedizioni.</p>
-<a href="@Url.Action("Contatti", "Home")">Contattaci</a>
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Numero Spedizione</th>
+            <th>Data Spedizione</th>
+            <th>Peso</th>
+            <th>Città Destinatario</th>
+            <th>Indirizzo Destinatario</th>
+            <th>Nome Destinatario</th>
+            <th>Data Consegna Prevista</th>
+            <th>Dettagli</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var spedizione in Model)
+        {
+            <tr>
+                <td>@spedizione.NumeroSpedizione</td>
+                <td>@spedizione.DataSpedizione.ToShortDateString()</td>
+                <td>@spedizione.Peso</td>
+                <td>@spedizione.CittaDestinatario</td>
+                <td>@spedizione.IndirizzoDestinatario</td>
+                <td>@spedizione.NomeDestinatario</td>
+                <td>@spedizione.DataConsegnaPrevista.ToShortDateString()</td>
+                <td>
+                    <a href="@Url.Action("DettagliSpedizione", new { id = spedizione.IdSpedizione })" class="btn btn-primary">Dettagli</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

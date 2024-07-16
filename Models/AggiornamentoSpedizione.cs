@@ -3,12 +3,11 @@
     public class AggiornamentoSpedizione
     {
         public int IdAggiornamento { get; set; }
-        public int IdSpedizione { get; set; }
-        public string Stato { get; set; } //poi inserirò questi 4 stati  'In transito', 'In consegna', 'Consegnato', 'Non consegnato'
+        public int SpedizioneId { get; set; }
+        public Spedizione Spedizione { get; set; }
+        public string Stato { get; set; }  // "In Transito", "In Consegna", "Consegnato", "Non Consegnato"
         public string Luogo { get; set; }
         public string Descrizione { get; set; }
         public DateTime DataOra { get; set; }
-
-        public Spedizione Spedizione { get; set; }
     }
 }
