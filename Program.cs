@@ -1,15 +1,24 @@
 using M_5_S_1.Service;
 using M_5_S_1.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
+
 using System.Data.Common;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Aggiungi i servizi necessari al contenitore di servizi.
 builder.Services.AddControllersWithViews();
+
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(opt =>
+    {
+        // pagina alla quale l'utente sarà indirizzato se non è stato già riconosciuto
+        opt.LoginPath = "/Auth/Login";
+    });
+
+
 
 // Configura la stringa di connessione dal file di configurazione
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
@@ -24,6 +33,7 @@ builder.Services.AddScoped<DbConnection>(provider =>
 // Aggiungi i servizi per le operazioni di Cliente, Spedizione e AggiornamentoSpedizione
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<ISpedizioneService, SpedizioneService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAggiornamentoSpedizioneService, AggiornamentoSpedizioneService>();
 
 // Configura il servizio di accesso al database SQL Server

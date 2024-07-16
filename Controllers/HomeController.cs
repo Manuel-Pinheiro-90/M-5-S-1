@@ -1,6 +1,7 @@
 using M_5_S_1.Models;
-using M_5_S_1.Models.M_5_S_1.Models;
+
 using M_5_S_1.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -21,6 +22,7 @@ namespace M_5_S_1.Controllers
             _aggiornamentoSpedizioneService = aggiornamentoSpedizioneService;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             var spedizioni = _spedizioneService.GetSpedizioniInConsegnaOggi();

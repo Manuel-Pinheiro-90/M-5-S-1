@@ -4,8 +4,6 @@
     ViewData["Title"] = "Dettagli Spedizione";
 }
 
-<h1>@ViewData["Title"]</h1>
-
 <h2>Spedizione #@Model.Spedizione.NumeroSpedizione</h2>
 <table class="table">
     <tr>
@@ -30,7 +28,7 @@
     </tr>
     <tr>
         <th>Costo Spedizione</th>
-        <td>@Model.Spedizione.CostoSpedizione</td>
+        <td>@Model.Spedizione.Costo</td>
     </tr>
     <tr>
         <th>Data Consegna Prevista</th>
@@ -42,4 +40,23 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th>Stato</th>
+            <th>Luogo</th>
+            <th>Descrizione</th>
+            <th>Data e Ora</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var aggiornamento in Model.Aggiornamenti)
+        {
+            <tr>
+                <td>@aggiornamento.Stato</td>
+                <td>@aggiornamento.Luogo</td>
+                <td>@aggiornamento.Descrizione</td>
+                <td>@aggiornamento.DataOra</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Torna alla Lista delle Spedizioni</a>
