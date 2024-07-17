@@ -1,39 +1,84 @@
-﻿@model IEnumerable<M_5_S_1.Models.Spedizione>
+﻿@model M_5_S_1.Models.DettagliSpedizioneViewModel
 
 @{
-    ViewData["Title"] = "Spedizioni in Consegna Oggi";
+    ViewData["Title"] = "Verifica Spedizione";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h2>@ViewData["Title"]</h2>
 
-<table class="table">
-    <thead>
+<form asp-action="VerificaSpedizione" method="post">
+    <div class="form-group">
+        <label for="CodiceFiscalePartitaIVA">Codice Fiscale o Partita IVA</label>
+        <input type="text" class="form-control" id="CodiceFiscalePartitaIVA" name="codiceFiscalePartitaIVA" required />
+    </div>
+    <div class="form-group">
+        <label for="NumeroIdentificativo">NumeroIdentificativo</label>
+        <input type="text" class="form-control" id="NumeroIdentificativo" name="NumeroIdentificativo" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Verifica</button>
+</form>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger mt-3">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+@if (Model != null && Model.Spedizione != null)
+{
+    <h3>Dettagli Spedizione</h3>
+    <table class="table">
         <tr>
-            <th>Numero Spedizione</th>
             <th>Data Spedizione</th>
-            <th>Peso</th>
-            <th>Città Destinatario</th>
-            <th>Indirizzo Destinatario</th>
-            <th>Nome Destinatario</th>
-            <th>Data Consegna Prevista</th>
-            <th>Dettagli</th>
+            <td>@Model.Spedizione.DataSpedizione.ToShortDateString()</td>
         </tr>
-    </thead>
-    <tbody>
-        @foreach (var spedizione in Model)
+        <tr>
+            <th>Peso</th>
+            <td>@Model.Spedizione.Peso</td>
+        </tr>
+        <tr>
+            <th>Città Destinatario</th>
+            <td>@Model.Spedizione.CittaDestinataria</td>
+        </tr>
+        <tr>
+            <th>Indirizzo Destinatario</th>
+            <td>@Model.Spedizione.IndirizzoDestinatario</td>
+        </tr>
+        <tr>
+            <th>Nome Destinatario</th>
+            <td>@Model.Spedizione.NomeDestinatario</td>
+        </tr>
+        <tr>
+            <th>Costo Spedizione</th>
+            <td>@Model.Spedizione.Costo</td>
+        </tr>
+        <tr>
+            <th>Data Consegna Prevista</th>
+            <td>@Model.Spedizione.DataConsegnaPrevista.ToShortDateString()</td>
+        </tr>
+    </table>
+
+    <h3>Aggiornamenti Spedizione</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Stato</th>
+                <th>Luogo</th>
+                <th>Descrizione</th>
+                <th>Data e Ora</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var aggiornamento in Model.Aggiornamenti)
         {
             <tr>
-                <td>@spedizione.NumeroSpedizione</td>
-                <td>@spedizione.DataSpedizione.ToShortDateString()</td>
-                <td>@spedizione.Peso</td>
-                <td>@spedizione.CittaDestinatario</td>
-                <td>@spedizione.IndirizzoDestinatario</td>
-                <td>@spedizione.NomeDestinatario</td>
-                <td>@spedizione.DataConsegnaPrevista.ToShortDateString()</td>
-                <td>
-                    <a href="@Url.Action("DettagliSpedizione", new { id = spedizione.IdSpedizione })" class="btn btn-primary">Dettagli</a>
-                </td>
+                <td>@aggiornamento.Stato</td>
+                <td>@aggiornamento.Luogo</td>
+                <td>@aggiornamento.Descrizione</td>
+                <td>@aggiornamento.DataOra</td>
             </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}

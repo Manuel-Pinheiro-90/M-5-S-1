@@ -72,6 +72,47 @@ namespace M_5_S_1.Services
             return cliente;
         }
 
+
+        public Cliente GetClienteByCodiceFiscalePartitaIVA(string codiceFiscalePartitaIVA)
+        {
+            Cliente cliente = null;
+            using (var connection = _serviceBase.GetConnection())
+            {
+                connection.Open();
+                var command = _serviceBase.GetCommand( "SELECT * FROM dbo.Clienti WHERE CodiceFiscale = @CodiceFiscale OR PartitaIVA = @PartitaIVA");
+                _serviceBase.AddParameter(command, "@CodiceFiscale", codiceFiscalePartitaIVA);
+                _serviceBase.AddParameter(command, "@PartitaIVA", codiceFiscalePartitaIVA);
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        cliente = new Cliente
+                        {
+                            IdCliente = reader.GetInt32(reader.GetOrdinal("IdCliente")),
+                            Nome = reader.GetString(reader.GetOrdinal("Nome")),
+                            TipoCliente = reader.GetString(reader.GetOrdinal("TipoCliente")),
+                            CodiceFiscale = reader.IsDBNull(reader.GetOrdinal("CodiceFiscale")) ? null : reader.GetString(reader.GetOrdinal("CodiceFiscale")),
+                            PartitaIVA = reader.IsDBNull(reader.GetOrdinal("PartitaIVA")) ? null : reader.GetString(reader.GetOrdinal("PartitaIVA")),
+                            Indirizzo = reader.GetString(reader.GetOrdinal("Indirizzo")),
+                            Citta = reader.GetString(reader.GetOrdinal("Citta")),
+                            CAP = reader.GetString(reader.GetOrdinal("CAP")),
+                            Email = reader.GetString(reader.GetOrdinal("Email"))
+                        };
+                    }
+                }
+            }
+            return cliente;
+        }
+
+
+
+
+
+
+
+
+
+
         public Cliente GetClienteByCodiceFiscale(string codiceFiscale)
         {
             Cliente cliente = null;
