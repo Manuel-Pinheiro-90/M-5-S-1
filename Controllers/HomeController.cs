@@ -32,33 +32,24 @@ namespace M_5_S_1.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult Indexe(string codiceFiscalePartitaIVA, string numeroSpedizione)
-        {
-            var cliente = _clienteService.GetClienteByCodiceFiscalePartitaIVA(codiceFiscalePartitaIVA);
-            if (cliente == null)
-            {
-                ViewBag.ErrorMessage = "Codice fiscale/partita IVA non valido.";
-                return View("Index");
-            }
 
-            var spedizione = _spedizioneService.GetSpedizioneByNumeroSpedizione(numeroSpedizione);
-            if (spedizione == null || spedizione.ClienteId != cliente.IdCliente)
+        [HttpPost]
+        public IActionResult VerificaSpedizione(string codiceFiscalePartitaIVA, string numeroIdentificativo)
+        {
+            var aggiornamenti = _spedizioneService.VerificaAggiornamentoSpedizione(codiceFiscalePartitaIVA, numeroIdentificativo);
+            if (aggiornamenti == null || !aggiornamenti.Any())
             {
                 ViewBag.ErrorMessage = "Spedizione non trovata o non associata al codice fiscale/partita IVA fornito.";
                 return View("Index");
             }
 
-            
             var viewModel = new DettagliSpedizioneViewModel
             {
-                Spedizione = spedizione,
-               
+                Aggiornamenti = aggiornamenti
             };
 
             return View("Index", viewModel);
         }
-
         public IActionResult DettagliSpedizione(int id)
         {
             var spedizione = _spedizioneService.GetSpedizioneById(id);

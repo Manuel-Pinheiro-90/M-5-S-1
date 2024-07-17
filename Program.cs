@@ -34,7 +34,7 @@ builder.Services.AddScoped<DbConnection>(provider =>
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<ISpedizioneService, SpedizioneService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IAggiornamentoSpedizioneService, AggiornamentoSpedizioneService>();
+
 
 // Configura il servizio di accesso al database SQL Server
 builder.Services.AddScoped<SqlServerServiceBase>();

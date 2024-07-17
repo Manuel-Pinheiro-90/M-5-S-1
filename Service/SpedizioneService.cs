@@ -17,12 +17,12 @@ namespace M_5_S_1.Services
             _serviceBase = serviceBase;
         }
 
-        private const string VER_SPED = "SELECT ss.Stato, ss.Luogo, ss.Descrizione From StatiSpedizione AS ss " +
-            "JOIN spedizioni AS s ON ss.IdSpedizione = s.IdSpedizione" +
-            "JOIN Clienti AS c ON s.IdCliente = c.IdCliente" +
-            "WHERE (c.CodiceFiscale = @CFOrPIVA  OR c.PartitaIVA = @CFOrPIVA) AND s.NumeroIdentificativo = @NumeroIdentificativo " +
-            "ORDER BY ss.DataOraAggiornamento DESC"; 
-       
+        private const string VER_SPED = "SELECT ss.Stato, ss.Luogo, ss.Descrizione, ss.DataOraAggiornamento FROM StatiSpedizione AS ss " +
+            "JOIN Spedizioni AS s ON ss.IdSpedizione = s.IdSpedizione " +
+            "JOIN Clienti AS c ON s.IdCliente = c.IdCliente " +
+            "WHERE (c.CodiceFiscale = @CFOrPIVA OR c.PartitaIVA = @CFOrPIVA) AND s.NumeroIdentificativo = @NumeroIdentificativo " +
+            "ORDER BY ss.DataOraAggiornamento DESC";
+
         public IEnumerable <AggiornamentoSpedizione> VerificaAggiornamentoSpedizione(string CFOrPIVA, string NumeroIdentificativo) 
         {
         var AggiornamentoSpedizione = new List <AggiornamentoSpedizione>();
@@ -30,7 +30,7 @@ namespace M_5_S_1.Services
             {
                 var cmd = _serviceBase.GetCommand(VER_SPED);
                 cmd.Parameters.Add(new SqlParameter("@CFOrPIVA", CFOrPIVA));
-                cmd.Parameters.Add(new SqlParameter("@NumeroSpedizione", NumeroIdentificativo));
+                cmd.Parameters.Add(new SqlParameter("@NumeroIdentificativo", NumeroIdentificativo));
                 connection.Open();
                 using var reader = cmd.ExecuteReader();
                 ; while (reader.Read()) {
