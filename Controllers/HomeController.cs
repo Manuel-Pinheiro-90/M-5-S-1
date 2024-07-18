@@ -93,7 +93,68 @@ namespace M_5_S_1.Controllers
         }
 
 
+        /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        [Authorize(Roles = "Admin")]
+        public IActionResult GestioneSpedizioni()
+        {
+            var spedizioni = _spedizioneService.GetAllSpedizioni();
+            return View(spedizioni);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult CreateSpedizione()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public IActionResult CreateSpedizione(Spedizione spedizione)
+        {
+            if (ModelState.IsValid)
+            {
+                _spedizioneService.AddSpedizione(spedizione);
+                return RedirectToAction(nameof(GestioneSpedizioni));
+            }
+            return View(spedizione);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult EditSpedizione(int id)
+        {
+            var spedizione = _spedizioneService.GetSpedizioneById(id);
+            if (spedizione == null)
+            {
+                return NotFound();
+            }
+            return View(spedizione);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public IActionResult EditSpedizione(Spedizione spedizione)
+        {
+            if (ModelState.IsValid)
+            {
+                _spedizioneService.UpdateSpedizione(spedizione);
+                return RedirectToAction(nameof(GestioneSpedizioni));
+            }
+            return View(spedizione);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult DeleteSpedizione(int id)
+        {
+            var spedizione = _spedizioneService.GetSpedizioneById(id);
+            if (spedizione == null)
+            {
+                return NotFound();
+            }
+            return View(spedizione);
+        }
+
+      
 
 
 

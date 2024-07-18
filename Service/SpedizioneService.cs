@@ -1,6 +1,5 @@
 ﻿using M_5_S_1.Models;
 using M_5_S_1.Service;
-
 using System.Data.SqlClient;
 
 
@@ -92,7 +91,7 @@ namespace M_5_S_1.Services
                             Peso = reader.GetDecimal(reader.GetOrdinal("Peso")),
                             CittaDestinataria = reader.GetString(reader.GetOrdinal("CittaDestinataria")),
                             IndirizzoDestinatario = reader.GetString(reader.GetOrdinal("IndirizzoDestinatario")),
-                            NomeDestinatario = reader.GetString(reader.GetOrdinal("NomeDestinatario")),
+                           NomeDestinatario = reader.GetString(reader.GetOrdinal("NominativoDestinatario")),
                             Costo = reader.GetDecimal(reader.GetOrdinal("Costo")),
                             DataConsegnaPrevista = reader.GetDateTime(reader.GetOrdinal("DataConsegnaPrevista")),
                             ClienteId = reader.GetInt32(reader.GetOrdinal("IdCliente")),
@@ -122,7 +121,7 @@ namespace M_5_S_1.Services
             using (var connection = _serviceBase.GetConnection())
             {
                 connection.Open();
-                var command = _serviceBase.GetCommand( "SELECT * FROM Spedizione WHERE IdSpedizione = @IdSpedizione");
+                var command = _serviceBase.GetCommand( "SELECT * FROM Spedizioni WHERE IdSpedizione = @IdSpedizione");
                 _serviceBase.AddParameter(command, "@IdSpedizione", id);
                 using (var reader = command.ExecuteReader())
                 {
@@ -180,23 +179,28 @@ namespace M_5_S_1.Services
 
         public void AddSpedizione(Spedizione spedizione)
         {
-            using (var connection = _serviceBase.GetConnection())
+            var connection = _serviceBase.GetConnection();
             {
                 connection.Open();
-                var command = _serviceBase.GetCommand( "INSERT INTO Spedizione (NumeroSpedizione, DataSpedizione, Peso," +
-                    " CittaDestinatario, IndirizzoDestinatario, NomeDestinatario, CostoSpedizione, DataConsegnaPrevista," +
-                    " ClienteId) VALUES (@NumeroSpedizione, @DataSpedizione, @Peso, @CittaDestinataria, @IndirizzoDestinatario," +
-                    " @NomeDestinatario, @CostoSpedizione, @DataConsegnaPrevista, @ClienteId)");
-                _serviceBase.AddParameter(command, "@NumeroIdentificativo", spedizione.NumeroIdentificativo);
-                _serviceBase.AddParameter(command, "@DataSpedizione", spedizione.DataSpedizione);
-                _serviceBase.AddParameter(command, "@Peso", spedizione.Peso);
-                _serviceBase.AddParameter(command, "@CittaDestinataria", spedizione.CittaDestinataria);
-                _serviceBase.AddParameter(command, "@IndirizzoDestinatario", spedizione.IndirizzoDestinatario);
-                _serviceBase.AddParameter(command, "@NomeDestinatario", spedizione.NomeDestinatario);
-                _serviceBase.AddParameter(command, "@CostoSpedizione", spedizione.Costo);
-                _serviceBase.AddParameter(command, "@DataConsegnaPrevista", spedizione.DataConsegnaPrevista);
-                _serviceBase.AddParameter(command, "@ClienteId", spedizione.ClienteId);
+                var command = _serviceBase.GetCommand( "INSERT INTO Spedizioni (NumeroIdentificativo, DataSpedizione, Peso," +
+                    " CittaDestinataria, IndirizzoDestinatario, NominativoDestinatario, Costo, DataConsegnaPrevista," +
+                    "IdCliente) VALUES (@NumeroIdentificativo, @DataSpedizione, @Peso, @CittaDestinataria, @IndirizzoDestinatario," +
+                    " @NominativoDestinatario, @Costo, @DataConsegnaPrevista, @IdCliente)");
+                command.Parameters.Add(new SqlParameter ("@NumeroIdentificativo", spedizione.NumeroIdentificativo));
+                command.Parameters.Add(new SqlParameter ("@DataSpedizione", spedizione.DataSpedizione));
+                command.Parameters.Add(new SqlParameter ("@Peso", spedizione.Peso));
+                command.Parameters.Add(new SqlParameter ("@CittaDestinataria", spedizione.CittaDestinataria));
+                command.Parameters.Add(new SqlParameter ("@IndirizzoDestinatario", spedizione.IndirizzoDestinatario));
+                command.Parameters.Add(new SqlParameter ("@NominativoDestinatario", spedizione.NomeDestinatario));
+                command.Parameters.Add(new SqlParameter ("@Costo", spedizione.Costo));
+                command.Parameters.Add(new SqlParameter ("@DataConsegnaPrevista", spedizione.DataConsegnaPrevista));
+                command.Parameters.Add(new SqlParameter ("@IdCliente", spedizione.ClienteId));
                 command.ExecuteNonQuery();
+                var result = command.ExecuteScalar();
+                if (result == null)
+                    throw new Exception("Creazione non completata");
+
+
             }
         }
 

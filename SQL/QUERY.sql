@@ -1,0 +1,1 @@
+﻿SELECT CittaDestinataria, COUNT(*) FROM Spedizioni GROUP BY CittaDestinataria

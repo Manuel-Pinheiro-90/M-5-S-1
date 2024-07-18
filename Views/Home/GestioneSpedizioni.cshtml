@@ -1,0 +1,47 @@
+﻿@model IEnumerable<M_5_S_1.Models.Spedizione>
+
+@{
+    ViewData["Title"] = "Gestione Spedizioni";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="CreateSpedizione" class="btn btn-primary">Crea Nuova Spedizione</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Numero Spedizione</th>
+            <th>Data Spedizione</th>
+            <th>Peso</th>
+            <th>Città Destinatario</th>
+            <th>Indirizzo Destinatario</th>
+            <th>Nome Destinatario</th>
+            <th>Costo</th>
+            <th>Data Consegna Prevista</th>
+            <th>Cliente</th>
+            <th>Azioni</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var spedizione in Model)
+        {
+            <tr>
+                <td>@spedizione.NumeroIdentificativo</td>
+                <td>@spedizione.DataSpedizione.ToShortDateString()</td>
+                <td>@spedizione.Peso</td>
+                <td>@spedizione.CittaDestinataria</td>
+                <td>@spedizione.IndirizzoDestinatario</td>
+                <td>@spedizione.NomeDestinatario</td>
+                <td>@spedizione.Costo</td>
+                <td>@spedizione.DataConsegnaPrevista.ToShortDateString()</td>
+                <td>@spedizione.Cliente.Nome</td>
+                <td>
+                    <a asp-action="EditSpedizione" asp-route-id="@spedizione.IdSpedizione" class="btn btn-warning">Modifica</a> |
+                    <a asp-action="DeleteSpedizione" asp-route-id="@spedizione.IdSpedizione" class="btn btn-danger">Elimina</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

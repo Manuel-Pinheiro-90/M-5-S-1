@@ -30,15 +30,18 @@
                             </li>
                         }
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="GestioneSpedizioni">Sped</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                    
-                        
-                        
-                        
-                    
-                    
-                    
+
+
+
+
+
+
+
                     </ul>
 
                     @if (User.Identity?.IsAuthenticated ?? false)
