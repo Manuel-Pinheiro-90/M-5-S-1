@@ -18,6 +18,12 @@ builder.Services
         opt.LoginPath = "/Auth/Login";
     });
 
+//aggiungi autorizazioni
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+});
+
 
 
 // Configura la stringa di connessione dal file di configurazione

@@ -19,7 +19,7 @@ namespace M_5_S_1.Service
         {
             try
             {
-                using var conn = new SqlConnection(connectionString);
+                 var conn = new SqlConnection(connectionString);
                 conn.Open();
                 using var cmd = new SqlCommand(LOGIN_COMMAND, conn);
                 cmd.Parameters.AddWithValue("@username", username);
@@ -44,7 +44,7 @@ namespace M_5_S_1.Service
             }
             catch (Exception ex)
             {
-                // Log exception or handle it as necessary
+               
                 throw new Exception("Errore durante il login.", ex);
             }
             return null;

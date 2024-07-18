@@ -24,6 +24,7 @@ namespace M_5_S_1.Controllers
 
 
 
+        /// /////////////////////////////////////////////////////VErifica spedizioni nell'index tramite form/////////////////////////////////////////////////////////
 
 
         [Authorize]
@@ -50,6 +51,11 @@ namespace M_5_S_1.Controllers
 
             return View("Index", viewModel);
         }
+
+      
+        /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+       
+
         public IActionResult DettagliSpedizione(int id)
         {
             var spedizione = _spedizioneService.GetSpedizioneById(id);
@@ -67,6 +73,26 @@ namespace M_5_S_1.Controllers
 
             return View(viewModel);
         }
+
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult Admin()
+        {
+            var spedizioniInConsegnaOggi = _spedizioneService.GetSpedizioniInConsegnaOggi();
+            var numeroSpedizioniTotali = _spedizioneService.GetNumeroSpedizioniTotali();
+           var numeroSpedizioniPerCitta = _spedizioneService.GetNumeroSpedizioniPerCitta();
+
+            var viewModel = new AdminViewModel
+            {
+                SpedizioniInConsegnaOggi = spedizioniInConsegnaOggi,
+               NumeroSpedizioniTotali = numeroSpedizioniTotali,
+             NumeroSpedizioniPerCitta = numeroSpedizioniPerCitta
+            };
+            
+            return View(viewModel);
+        }
+
+
 
 
 

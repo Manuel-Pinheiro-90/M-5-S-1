@@ -1,0 +1,66 @@
+﻿@model M_5_S_1.Models.AdminViewModel
+
+@{
+    ViewData["Title"] = "Admin Page";
+
+}
+
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Spedizioni in consegna oggi</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Numero Spedizione</th>
+            <th>Data Spedizione</th>
+            <th>Peso</th>
+            <th>Città Destinatario</th>
+            <th>Indirizzo Destinatario</th>
+            <th>Nome Destinatario</th>
+            <th>Costo</th>
+            <th>Data Consegna Prevista</th>
+            <th>Cliente</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var spedizione in Model.SpedizioniInConsegnaOggi)
+        {
+            <tr>
+                <td>@spedizione.NumeroIdentificativo</td>
+                <td>@spedizione.DataSpedizione.ToShortDateString()</td>
+                <td>@spedizione.Peso</td>
+                <td>@spedizione.CittaDestinataria</td>
+                <td>@spedizione.IndirizzoDestinatario</td>
+                <td>@spedizione.NomeDestinatario</td>
+                <td>@spedizione.Costo</td>
+                <td>@spedizione.DataConsegnaPrevista.ToShortDateString()</td>
+                <td>@spedizione.Cliente.Nome</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<h3>Numero di spedizioni totali</h3>
+<p>@Model.NumeroSpedizioniTotali</p>
+
+<h3>Numero di spedizioni per città</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Città</th>
+            <th>Numero di Spedizioni</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.NumeroSpedizioniPerCitta)
+        {
+            <tr>
+                <td>@item.Key</td>
+                <td>@item.Value</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

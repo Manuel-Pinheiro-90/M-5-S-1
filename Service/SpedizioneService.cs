@@ -1,21 +1,25 @@
 ﻿using M_5_S_1.Models;
 using M_5_S_1.Service;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
+
 using System.Data.SqlClient;
-using System.Threading.Tasks.Dataflow;
+
 
 namespace M_5_S_1.Services
 {
     public class SpedizioneService :    ISpedizioneService
     {
         private readonly SqlServerServiceBase _serviceBase;
-
-        public SpedizioneService(SqlServerServiceBase serviceBase)
+        private readonly ILogger<SpedizioneService> _logger;
+        public SpedizioneService(SqlServerServiceBase serviceBase, ILogger<SpedizioneService> logger)
         {
             _serviceBase = serviceBase;
+            _logger = logger;
         }
+
+
+
+
+        /// /////////////////////Verifica aggiornamenti spedizione in base a codici forniti ///////////////////////////////////////////////
 
         private const string VER_SPED = "SELECT ss.Stato, ss.Luogo, ss.Descrizione, ss.DataOraAggiornamento FROM StatiSpedizione AS ss " +
             "JOIN Spedizioni AS s ON ss.IdSpedizione = s.IdSpedizione " +
@@ -58,6 +62,7 @@ namespace M_5_S_1.Services
 
         }
 
+        /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -231,10 +236,13 @@ namespace M_5_S_1.Services
             }
         }
 
+
+
+
         public IEnumerable<Spedizione> GetSpedizioniInConsegnaOggi()
         {
             var spedizioni = new List<Spedizione>();
-            using (var connection = _serviceBase.GetConnection())
+            var connection = _serviceBase.GetConnection();
             {
                 connection.Open();
                 var command = _serviceBase.GetCommand( "SELECT * FROM Spedizioni WHERE DataConsegnaPrevista = CAST(GETDATE() AS DATE)");
@@ -258,26 +266,44 @@ namespace M_5_S_1.Services
                     }
                 }
             }
+            connection.Close();
             return spedizioni;
         }
 
         public int GetNumeroSpedizioniTotali()
         {
-            using (var connection = _serviceBase.GetConnection())
+            var connection = _serviceBase.GetConnection();
+            try
             {
+                
+
                 connection.Open();
-                var command = _serviceBase.GetCommand( "SELECT COUNT(*) FROM Spedizioni");
+                var command = _serviceBase.GetCommand("SELECT COUNT(*) FROM Spedizioni");
+                command.Connection = connection; 
+
+                
                 return (int)command.ExecuteScalar();
+
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Errore durante il conteggio delle spedizioni totali.");
+
+
+                throw;
+            }
+            finally {connection.Close(); }
+        
         }
+
 
         public Dictionary<string, int> GetNumeroSpedizioniPerCitta()
         {
             var result = new Dictionary<string, int>();
-            using (var connection = _serviceBase.GetConnection())
+            var connection = _serviceBase.GetConnection();
             {
                 connection.Open();
-                var command = _serviceBase.GetCommand( "SELECT CittaDestinataria, COUNT(*) FROM Spedizione GROUP BY CittaDestinataria");
+                var command = _serviceBase.GetCommand( "SELECT CittaDestinataria, COUNT(*) FROM Spedizioni GROUP BY CittaDestinataria");
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -286,6 +312,7 @@ namespace M_5_S_1.Services
                     }
                 }
             }
+            connection.Close();
             return result;
         }
     }
